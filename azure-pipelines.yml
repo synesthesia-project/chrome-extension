@@ -23,4 +23,4 @@ steps:
     yarn install
     git checkout node_modules
     gulp
-  displayName: 'build composer'
+  displayName: 'build chrome-extension'
