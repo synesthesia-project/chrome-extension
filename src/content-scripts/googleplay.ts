@@ -1,4 +1,4 @@
-import {PlayState, PlayStateTiming, TabMessage} from './proto';
+import {PlayState, PlayStateTiming, TabMessage} from '../proto';
 
 ($ => {
 
