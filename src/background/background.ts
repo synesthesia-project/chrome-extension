@@ -1,7 +1,7 @@
 import { ControllerEndpoint } from '@synesthesia-project/core/protocols/control';
 import { DEFAULT_SYNESTHESIA_PORT } from '@synesthesia-project/core/constants';
 
-import { PlayState, PlayStateTiming, TabMessage } from '../proto';
+import { PlayState, TabMessage } from '../proto';
 
 // TODO: Open composer when button is clicked
 // (need to get the URL from the server)
