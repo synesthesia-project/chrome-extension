@@ -1,5 +1,5 @@
 import { ControllerEndpoint } from '@synesthesia-project/core/protocols/control';
-import { DEFAULT_SYNESTHESIA_PORT } from '@synesthesia-project/core/constants';
+import { DEFAULT_SYNESTHESIA_PORT, CONTROLLER_WEBSOCKET_PATH } from '@synesthesia-project/core/constants';
 
 import { PlayState, TabMessage } from '../proto';
 
@@ -41,7 +41,7 @@ function connectionListener(port: chrome.runtime.Port) {
   let endpoint: ControllerEndpoint | null = null;
   let state: PlayState | null = null;
 
-  const ws = new WebSocket(`ws://localhost:${DEFAULT_SYNESTHESIA_PORT}/control`);
+  const ws = new WebSocket(`ws://localhost:${DEFAULT_SYNESTHESIA_PORT}${CONTROLLER_WEBSOCKET_PATH}`);
 
   ws.addEventListener('open', () => {
       // Start controller
