@@ -1,13 +1,11 @@
 import { ControllerEndpoint } from '@synesthesia-project/core/protocols/control';
-import { DEFAULT_SYNESTHESIA_PORT, CONTROLLER_WEBSOCKET_PATH } from '@synesthesia-project/core/constants';
+import { DEFAULT_SYNESTHESIA_PORT, CONTROLLER_WEBSOCKET_PATH, DEFAULT_COMPOSER_URL } from '@synesthesia-project/core/constants';
 
 import { PlayState, TabMessage } from '../proto';
 
-// TODO: Open composer when button is clicked
-// (need to get the URL from the server)
-// chrome.browserAction.onClicked.addListener(tab => {
-//     chrome.tabs.create({'url': chrome.extension.getURL('index.html'), 'selected': true});
-// });
+chrome.browserAction.onClicked.addListener(tab => {
+    chrome.tabs.create({'url': DEFAULT_COMPOSER_URL, 'selected': true});
+});
 
 interface Tab {
   playState: PlayState | null;
