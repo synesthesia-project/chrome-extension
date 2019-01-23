@@ -1,5 +1,6 @@
 import { ControllerEndpoint } from '@synesthesia-project/core/protocols/control';
 import { DEFAULT_SYNESTHESIA_PORT, CONTROLLER_WEBSOCKET_PATH, DEFAULT_COMPOSER_URL } from '@synesthesia-project/core/constants';
+import { File, LayerState } from '@synesthesia-project/core/protocols/control/messages';
 
 import { PlayState, TabMessage } from '../proto';
 
@@ -12,24 +13,30 @@ interface Tab {
 }
 
 function sendState(endpoint: ControllerEndpoint, state: PlayState | null) {
-  if (state && state.state.state === 'playing') {
-    // TODO: handle sending "paused" state to server
+  if (!state) {
     endpoint.sendState({
-      layers: [{
-        file: {
-          type: 'meta',
-          title: state.title,
-          artist: state.artist,
-          album: state.album,
-          lengthMillis: state.length
-        },
-        effectiveStartTimeMillis: state.state.effectiveStartTimeMillis,
-        playSpeed: 1
-      }]
+      layers: []
     });
   } else {
+    const file: File = {
+      type: 'meta',
+      title: state.title,
+      artist: state.artist,
+      album: state.album,
+      lengthMillis: state.length
+    };
+    const layerState: LayerState = state.state.state === 'playing' ?
+      {
+        type: 'playing',
+        effectiveStartTimeMillis: state.state.effectiveStartTimeMillis,
+        playSpeed: 1
+      } :
+      {
+        type: 'paused',
+        positionMillis: state.state.positionMillis
+      };
     endpoint.sendState({
-        layers: []
+      layers: [{ file, state: layerState }]
     });
   }
 }
@@ -45,6 +52,15 @@ function connectionListener(port: chrome.runtime.Port) {
       // Start controller
       endpoint = new ControllerEndpoint(msg => ws.send(JSON.stringify(msg)));
       sendState(endpoint, state);
+      endpoint.setRequestHandler(req => {
+        // TODO: connect this up properly, and return correct success
+        port.postMessage(req);
+        return Promise.resolve({success: true});
+      });
+  });
+  ws.addEventListener('message', msg => {
+    if (!endpoint) return;
+    endpoint.recvMessage(JSON.parse(msg.data));
   });
 
   function handleTabMessage(msg: TabMessage) {

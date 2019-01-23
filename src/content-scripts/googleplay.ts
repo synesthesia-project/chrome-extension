@@ -1,3 +1,4 @@
+import { ServerRequest } from '@synesthesia-project/core/protocols/control/messages';
 import {PlayState, PlayStateTiming, TabMessage} from '../proto';
 
 ($ => {
@@ -17,7 +18,18 @@ import {PlayState, PlayStateTiming, TabMessage} from '../proto';
   // Connect to background script
   const port = chrome.runtime.connect();
   port.onMessage.addListener(msg => {
-    console.log('msg', msg);
+    const request: ServerRequest = msg as any;
+    switch (request.request) {
+      case 'toggle':
+        control().toggle();
+        return;
+      case 'pause':
+        control().toggle();
+        return;
+      case 'go-to-time':
+        control().goTo(request.positionMillis);
+        return;
+    }
   });
 
   function sendMessage(msg: TabMessage) {
@@ -123,7 +135,8 @@ import {PlayState, PlayStateTiming, TabMessage} from '../proto';
       },
       toggle: () => $play_pause.click(),
       next: () => $next.click(),
-      prev: () => $prev.click()
+      prev: () => $prev.click(),
+      goTo: (millis: number) => console.log(millis)
     };
   }
 
