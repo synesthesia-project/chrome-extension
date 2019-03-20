@@ -194,7 +194,7 @@ import {PlayState, PlayStateTiming, TabMessage} from '../proto';
         canvas.width = Math.min(img.width, 62);
         ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         const dataURL = canvas.toDataURL(outputFormat);
-        callback.call(this, dataURL);
+        callback(dataURL);
       };
       img.src = url;
     }

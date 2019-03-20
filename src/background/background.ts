@@ -4,13 +4,9 @@ import { File, LayerState } from '@synesthesia-project/core/protocols/control/me
 
 import { PlayState, TabMessage } from '../proto';
 
-chrome.browserAction.onClicked.addListener(tab => {
+chrome.browserAction.onClicked.addListener(() => {
     chrome.tabs.create({'url': DEFAULT_COMPOSER_URL, 'selected': true});
 });
-
-interface Tab {
-  playState: PlayState | null;
-}
 
 function sendState(endpoint: ControllerEndpoint, state: PlayState | null) {
   if (!state) {
@@ -76,7 +72,7 @@ function connectionListener(port: chrome.runtime.Port) {
   }
 
   // Setup Port Listeners
-  port.onMessage.addListener(handleTabMessage);
+  port.onMessage.addListener(handleTabMessage as (msg: any) => void);
   port.onDisconnect.addListener(handleTabClosed);
 }
 
